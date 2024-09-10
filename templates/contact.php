@@ -14,7 +14,7 @@
     </div>
     <div class="form-group">
         <label for="phone">Ваш телефон</label>
-        <input type="tel" id="phone" name="phone" required pattern="^\+?[0-9\s]+$">
+        <input type="tel" id="phone" name="phone" required>
         <span class="error-message"></span>
     </div>
     <div class="form-group">

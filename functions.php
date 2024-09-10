@@ -115,4 +115,14 @@ add_action('admin_init', 'lead_form_settings_init');
 
 
 
+function enqueue_custom_scripts() {
+    wp_enqueue_style('intl-tel-input', 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css');
+    
+    wp_enqueue_script('intl-tel-input', 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js', array('jquery'), null, true);
+
+    wp_enqueue_script('custom-script', get_template_directory_uri() . '/scripts/template-scripts/contact.js', array('intl-tel-input'), null, true);
+}
+add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
+
+
 ?>
