@@ -5,9 +5,10 @@
     get_header();
 ?>
 
-<form id="ccform" method="post" action="">
+<form id="lead-form" method="post" action='<?php echo admin_url('admin-ajax.php')?>'>
+    <input type='hidden' name='action' value='my_action'>
     <div class="form-group">
-        <label class='nameme' for="name">Ваше ім’я</label>
+        <label class='name' for="name">Ваше ім’я</label>
         <input type="text" id="name" name="name" required pattern="^[A-Za-zА-Яа-я]+( [A-Za-zА-Яа-я]+)*$">
         <span class="error-message"></span>
     </div>
