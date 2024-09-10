@@ -1,3 +1,23 @@
 .name {
     color: red;
 }
+
+#phone::-webkit-input-placeholder {
+    color: transparent;
+}
+
+#phone::-moz-placeholder {
+    color: transparent;
+}
+
+#phone:-ms-input-placeholder {
+    color: transparent;
+}
+
+#phone:-ms-input-placeholder {
+    color: transparent;
+}
+
+.iti--separate-dial-code .iti__selected-flag {
+    background-color: #fff !important;
+}

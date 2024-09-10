@@ -1,11 +1,13 @@
 <?php
 
-add_action('wp_enqueue_scripts', 'rgb_studio_scripts');
-
-function rgb_studio_scripts(){
+function rgb_studio_scripts() {
     wp_enqueue_style('main', get_stylesheet_uri());
     wp_enqueue_style('rgb_studio-style', get_template_directory_uri() . '/styles/main.css', array('main'));
     wp_enqueue_script('rgb_studio-scripts', get_template_directory_uri() . '/scripts/main.js', array(), false, true);
+
+    wp_localize_script('rgb_studio-scripts', 'lead_form_params', [
+        'ajax_url' => admin_url('admin-ajax.php'),
+    ]);
     
     if (is_page_template('templates/contact.php')) {
         wp_enqueue_style('contact-style', get_template_directory_uri() . '/styles/template-styles/contact.css', array('main'));
@@ -13,7 +15,37 @@ function rgb_studio_scripts(){
     }
 }
 
+add_action('wp_enqueue_scripts', 'rgb_studio_scripts');
+
+function lead_form_settings_init() {
+    add_settings_section('lead_form_settings_section', 'Lead Form Settings', null, 'general');
+    add_settings_field('lead_form_emails', 'Lead Form Emails', 'lead_form_emails_callback', 'general', 'lead_form_settings_section');
+    register_setting('general', 'lead_form_emails', [
+        'sanitize_callback' => 'sanitize_lead_form_emails'
+    ]);
+}
+
+function sanitize_lead_form_emails($input) {
+    $emails = array_map('trim', explode(',', $input));
+    $emails = array_filter($emails, function($email) {
+        return is_email($email);
+    });
+    return implode(', ', $emails);
+}
+
+function lead_form_emails_callback() {
+    $emails = get_option('lead_form_emails', '');
+    echo '<input type="text" id="lead_form_emails" name="lead_form_emails" value="' . esc_attr($emails) . '" class="regular-text" placeholder="example1@example.com, example2@example.com" />';
+}
+
+add_action('admin_init', 'lead_form_settings_init');
+
 function handle_lead_form_submission() {
+    if (!isset($_POST['form_data'])) {
+        wp_send_json_error(['errors' => 'Немає даних для обробки.']);
+        return;
+    }
+
     parse_str($_POST['form_data'], $form_data);
 
     $errors = [];
@@ -32,17 +64,25 @@ function handle_lead_form_submission() {
 
     if (!empty($errors)) {
         wp_send_json_error(['errors' => $errors]);
+        return;
     }
 
     $admin_emails = get_option('lead_form_emails', 'example@example.com');
     $to = explode(',', $admin_emails);
     $subject = 'Новий лід з контактної форми';
     $body = sprintf(
-        "Ім'я: %s\nТелефон: %s\nEmail: %s\nПовідомлення: %s",
+        "Ім'я: %s\nТелефон: %s\nEmail: %s\nПовідомлення: %s\nЧас подачі: %s\nUTM Source: %s\nUTM Medium: %s\nUTM Campaign: %s\nUTM Term: %s\nUTM Content: %s\nIP користувача: %s",
         sanitize_text_field($form_data['name']),
         sanitize_text_field($form_data['phone']),
         sanitize_email($form_data['email']),
-        sanitize_textarea_field($form_data['message'])
+        sanitize_textarea_field($form_data['message'] ?? ''),
+        sanitize_text_field($form_data['submission_time'] ?? ''),
+        sanitize_text_field($form_data['utm_source'] ?? ''),
+        sanitize_text_field($form_data['utm_medium'] ?? ''),
+        sanitize_text_field($form_data['utm_campaign'] ?? ''),
+        sanitize_text_field($form_data['utm_term'] ?? ''),
+        sanitize_text_field($form_data['utm_content'] ?? ''),
+        sanitize_text_field($form_data['user_ip'] ?? '')
     );
     $headers = ['Content-Type: text/plain; charset=UTF-8'];
 
@@ -51,15 +91,18 @@ function handle_lead_form_submission() {
     $post_data = [
         'post_type' => 'lead',
         'post_status' => 'publish',
-        'post_title' => 'Лід від ' . $form_data['name'],
+        'post_title' => 'Lead from ' . $form_data['name'],
         'meta_input' => [
+            'name' => sanitize_text_field($form_data['name']),
             'phone' => sanitize_text_field($form_data['phone']),
             'email' => sanitize_email($form_data['email']),
             'message' => sanitize_textarea_field($form_data['message']),
-            'ip_address' => $_SERVER['REMOTE_ADDR'],
-            'utm_source' => isset($_COOKIE['utm_source']) ? $_COOKIE['utm_source'] : '',
-            'utm_medium' => isset($_COOKIE['utm_medium']) ? $_COOKIE['utm_medium'] : '',
-            'utm_campaign' => isset($_COOKIE['utm_campaign']) ? $_COOKIE['utm_campaign'] : '',
+            'submission_time' => sanitize_text_field($form_data['submission_time']),
+            'ip_address' => sanitize_text_field($form_data['user_ip']),
+            'utm_source' => sanitize_text_field($form_data['utm_source']),
+            'utm_medium' => sanitize_text_field($form_data['utm_medium']),
+            'utm_campaign' => sanitize_text_field($form_data['utm_campaign']),
+            'utm_term' => sanitize_text_field($form_data['utm_term']),
         ],
     ];
 
@@ -70,17 +113,6 @@ function handle_lead_form_submission() {
 
 add_action('wp_ajax_submit_lead_form', 'handle_lead_form_submission');
 add_action('wp_ajax_nopriv_submit_lead_form', 'handle_lead_form_submission');
-
-
-function lead_form_scripts() {
-    wp_enqueue_script('lead-form-js', get_template_directory_uri() . '/js/lead-form.js', ['jquery'], null, true);
-    wp_localize_script('lead-form-js', 'lead_form_params', [
-        'ajax_url' => admin_url('admin-ajax.php'),
-    ]);
-}
-
-add_action('wp_enqueue_scripts', 'lead_form_scripts');
-
 
 function create_lead_post_type() {
     register_post_type('lead', [
@@ -97,32 +129,10 @@ function create_lead_post_type() {
 
 add_action('init', 'create_lead_post_type');
 
-
-
-function lead_form_settings_init() {
-    add_settings_section('lead_form_settings_section', 'Lead Form Settings', null, 'general');
-
-    add_settings_field('lead_form_emails', 'Lead Form Emails', 'lead_form_emails_callback', 'general', 'lead_form_settings_section');
-    register_setting('general', 'lead_form_emails', ['sanitize_callback' => 'sanitize_text_field']);
-}
-
-function lead_form_emails_callback() {
-    $emails = get_option('lead_form_emails', '');
-    echo '<input type="text" id="lead_form_emails" name="lead_form_emails" value="' . esc_attr($emails) . '" class="regular-text" />';
-}
-
-add_action('admin_init', 'lead_form_settings_init');
-
-
-
 function enqueue_custom_scripts() {
     wp_enqueue_style('intl-tel-input', 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css');
-    
-    wp_enqueue_script('intl-tel-input', 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js', array('jquery'), null, true);
-
-    wp_enqueue_script('custom-script', get_template_directory_uri() . '/scripts/template-scripts/contact.js', array('intl-tel-input'), null, true);
+    wp_enqueue_script('intl-tel-input', 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js', ['jquery'], null, true);
 }
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
-
 
 ?>
