@@ -24,6 +24,10 @@
     padding: 0px;
 }
 
+.iti__country-list {
+    width: 340px;
+}
+
 body {
     background: #ebf5ef;
     font-family: "Inter Tight", sans-serif;
