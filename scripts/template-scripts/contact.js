@@ -18,8 +18,9 @@ jQuery(document).ready(function ($) {
             },
             success: function (response) {
                 if (response.success) {
-                    $('#lead-form').hide();
-                    $('#form-success').show();
+                    $('#lead-form')[0].reset();
+                    $('#success-modal').fadeIn();
+                    $('#content-wrapper').css('display', 'none');
                 } else {
                     $('.error-message').empty();
                     $.each(response.data.errors, function (key, message) {
@@ -32,6 +33,11 @@ jQuery(document).ready(function ($) {
                 console.log('AJAX Error: ' + status + error);
             },
         });
+    });
+
+    $('#close-modal').on('click', function () {
+        $('#success-modal').fadeOut();
+        $('#content-wrapper').css('display', 'flex');
     });
 });
 

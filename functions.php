@@ -50,7 +50,7 @@ function handle_lead_form_submission() {
 
     $errors = [];
 
-    if (empty($form_data['name']) || !preg_match("/^[A-Za-zА-Яа-я]+( [A-Za-zА-Яа-я]+)*$/", $form_data['name'])) {
+    if (empty($form_data['name']) || !preg_match("/^[A-Za-zА-Яа-яІіЇїЄєЁёҐґ]+( [A-Za-zА-Яа-яІіЇїЄєЁёҐґ]+)*$/u", $form_data['name'])) {
         $errors['name'] = 'Введіть коректне ім’я.';
     }
 
