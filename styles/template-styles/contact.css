@@ -70,7 +70,7 @@ body {
 }
 
 .slogan-text {
-    margin: 215px 52px 215px 0;
+    margin: 215px 52px 0 0;
     font-weight: 600;
     font-size: 48px;
     line-height: 130%;
@@ -156,6 +156,7 @@ textarea::placeholder {
     line-height: 140%;
     color: #f4f1ff;
     margin-bottom: 16px;
+    cursor: pointer;
 }
 
 .button-text {
@@ -229,6 +230,7 @@ textarea::placeholder {
     line-height: 140%;
     color: #6f6f72;
     margin-left: auto;
+    cursor: pointer;
 }
 
 .modal-content {
@@ -252,12 +254,37 @@ textarea::placeholder {
     line-height: 124%;
 }
 
+@media screen and (max-width: 1150px) {
+    .face2 {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 930px) {
+    .flex-wrapper {
+        flex-direction: column;
+    }
+    .form-heading {
+        width: 100%;
+    }
+    .submit-btn {
+        width: 100%;
+    }
+}
+
 @media screen and (max-width: 768px) {
     .container {
-        padding: 0 32px;
+        padding: 0;
     }
     .wrapper {
         padding: 20px;
+    }
+    .slogan-text {
+        margin: 180px 0 30px;
+        font-size: 36px;
+    }
+    .modal {
+        width: calc(100% - 88px);
     }
 }
 
@@ -267,5 +294,9 @@ textarea::placeholder {
     }
     .wrapper {
         padding: 10px;
+    }
+    .slogan-text {
+        margin: 180px 0 30px;
+        font-size: 24px;
     }
 }

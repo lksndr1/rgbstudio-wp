@@ -9,8 +9,8 @@
     <div class="wrapper">
         <div id='content-wrapper' class="flex-wrapper">
             <div class='slogan'>
-                <img src="../src/images/face1.png" alt="woman face" class="face1">
-                <img src="../src/images/face2.png" alt="woman face" class="face2">
+                <img src="<?php echo get_template_directory_uri(); ?>/src/images/face1.png" alt="woman face" class="face1">
+                <img src="<?php echo get_template_directory_uri(); ?>/src/images/face2.png" alt="woman face" class="face2">
                 <h1 class='slogan-text'>Ми завжди готові запропонувати інноваційні та альтернативні шляхи лікування зубів</h1>
             </div>
             <div class="form-wrapper">
@@ -56,7 +56,7 @@
                 </svg>
             </button>
             <div class="modal-content">
-                <img src="../src/images/success-rocket.png" alt="rocket" class="rocket-img">
+                <img src="<?php echo get_template_directory_uri(); ?>/src/images/success-rocket.png" alt="rocket" class="rocket-img">
                 <p class='modal-message-status'>Ваш запит надіслано</p>
                 <p class='modal-thanks'>Дякуємо,</br>що довіряєте!</p>
             </div>
