@@ -2,32 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-#phone::-webkit-input-placeholder {
-    color: transparent;
-}
-
-#phone::-moz-placeholder {
-    color: transparent;
-}
-
-#phone:-ms-input-placeholder {
-    color: transparent;
-}
-
-#phone:-ms-input-placeholder {
-    color: transparent;
-}
-
-.iti--separate-dial-code .iti__selected-flag {
-    background-color: #fff !important;
-    margin-left: 12px;
-    padding: 0px;
-}
-
-.iti__country-list {
-    width: 340px;
-}
-
 body {
     background: #ebf5ef;
     font-family: "Inter Tight", sans-serif;
@@ -121,6 +95,32 @@ input#phone {
     padding-right: 18px;
     padding-left: 101px !important;
     width: 100%;
+}
+
+#phone::-webkit-input-placeholder {
+    color: transparent;
+}
+
+#phone::-moz-placeholder {
+    color: transparent;
+}
+
+#phone:-ms-input-placeholder {
+    color: transparent;
+}
+
+#phone:-ms-input-placeholder {
+    color: transparent;
+}
+
+.iti--separate-dial-code .iti__selected-flag {
+    background-color: #fff !important;
+    margin-left: 12px;
+    padding: 0px;
+}
+
+.iti__country-list {
+    width: 340px;
 }
 
 label {

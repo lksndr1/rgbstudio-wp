@@ -1,48 +1,79 @@
 jQuery(document).ready(function ($) {
-    // console.log('Form submit handler attached');
-
     $('#lead-form').on('submit', function (e) {
         e.preventDefault();
-        // console.log('Form submitted');
 
-        let iti = window.intlTelInputGlobals.getInstance(document.querySelector("#phone"));
-        let phoneNumber = iti.getNumber();
-        let formData = $(this).serializeArray();
-        formData.push({name: 'phone', value: phoneNumber});
+        let isValid = true;
+        $('.error-message').text('');
+        $('.input').removeClass('error');
 
-        $('#submit-btn').prop('disabled', true);
-        $('#submit-btn .spinner').show();
+        const name = $('#name').val();
+        if (!name.match(/^[A-Za-zА-Яа-яІіЇїЄєЁёҐґ]+( [A-Za-zА-Яа-яІіЇїЄєЁёҐґ]+)*$/)) {
+            isValid = false;
+            $('#name').next('.error-message').text('Будь ласка, введіть дійсне ім’я.');
+            $('#name').closest('input').addClass('error');
+        } else {
+            $('#name').closest('input').removeClass('error');
+        }
+        
+        const phone = $('#phone').val();
+        if (!phone.match(/[\+0-9\s]+/)) {
+            isValid = false;
+            $('#phone').closest('.form-group').find('.error-message').text('Будь ласка, введіть дійсний номер телефону.');
+            $('#phone').closest('input').addClass('error');
+        } else {
+            $('#phone').closest('input').removeClass('error');
+        }
+        
+        const email = $('#email').val();
+        if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+            isValid = false;
+            $('#email').next('.error-message').text('Будь ласка, введіть дійсну електронну адресу.');
+            $('#email').closest('input').addClass('error');
+        } else {
+            $('#email').closest('input').removeClass('error');
+        }
 
-        $.ajax({
-            url: lead_form_params.ajax_url,
-            type: 'POST',
-            data: {
-                action: 'submit_lead_form',
-                form_data: $.param(formData),
-            },
-            success: function (response) {
-                if (response.success) {
-                    $('#lead-form')[0].reset();
-                    $('#success-modal').fadeIn();
-                    $('#content-wrapper').css('display', 'none');
-                } else {
-                    $('.error-message').empty();
-                    $.each(response.data.errors, function (key, message) {
-                        var inputField = $('#' + key);
-                        inputField.addClass('error');
-                        inputField.closest('.form-group').find('.error-message').text(message);
-                    });
+        if (isValid) {
+            let iti = window.intlTelInputGlobals.getInstance(document.querySelector("#phone"));
+            let phoneNumber = iti.getNumber();
+            let formData = $(this).serializeArray();
+            formData.push({name: 'phone', value: phoneNumber});
+
+            $('#submit-btn').prop('disabled', true);
+            $('#submit-btn .spinner').show();
+
+            $.ajax({
+                url: lead_form_params.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'submit_lead_form',
+                    form_data: $.param(formData),
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $('#lead-form')[0].reset();
+                        $('#success-modal').fadeIn();
+                        $('#content-wrapper').css('display', 'none');
+                    } else {
+                        $('.error-message').empty();
+                        $.each(response.data.errors, function (key, message) {
+                            var inputField = $('#' + key);
+                            inputField.addClass('error');
+                            inputField.closest('.form-group').find('.error-message').text(message);
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('AJAX Error: ' + status + error);
+                },
+
+                complete: function () {
+                    $('#submit-btn').prop('disabled', false);
+                    $('#submit-btn .spinner').hide();
+                    $('input').removeClass('error');
                 }
-            },
-            error: function (xhr, status, error) {
-                console.log('AJAX Error: ' + status + error);
-            },
-
-            complete: function () {
-                $('#submit-btn').prop('disabled', false);
-                $('#submit-btn .spinner').hide();
-            }
-        });
+            });
+        }
     });
 
     $('#close-modal').on('click', function () {

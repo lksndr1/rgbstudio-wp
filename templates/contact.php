@@ -26,23 +26,26 @@
                     <input type='hidden' name='action' value='my_action'>
                     <div class="form-group">
                         <label class='name' for="name">Ваше ім’я</label>
-                        <input type="text" id="name" name="name" pattern="^[A-Za-zА-Яа-яІіЇїЄєЁёҐґ]+( [A-Za-zА-Яа-яІіЇїЄєЁёҐґ]+)*$" required placeholder="Вкажіть Ваше ім'я">
+                        <input type="text" id="name" name="name" required placeholder="Вкажіть Ваше ім'я">
                         <span class="error-message"></span>
                     </div>
                     <div class="form-group">
                         <label for="phone">Ваш телефон</label>
-                        <input type="tel" id="phone" name="phone" pattern="[\+0-9\s]+" required>
+                        <input type="tel" id="phone" name="phone" required>
                         <span class="error-message"></span>
                     </div>
                     <div class="form-group">
                         <label for="email">Ваш e-mail</label>
-                        <input type="email" id="email" name="email" placeholder='email@gmail.com'>
+                        <input id="email" name="email" placeholder='email@gmail.com'>
                         <span class="error-message"></span>
                     </div>
                     <div class="form-group">
                         <textarea id="message" name="message" placeholder='Коротко опишіть проблему, яку хочете вирішити'></textarea>
                     </div>
-                    <button type="submit" id="submit-btn" class="submit-btn"><span class='button-text'>Надіслати</span></button>
+                    <button type="submit" id="submit-btn" class="submit-btn">
+                        <span class='button-text'>Надіслати</span>
+                        <span class="spinner" style="display: none;"></span>
+                    </button>
                     <p class="personal-data">Натискаючи на кнопку, я даю згоду<br>на <a class='personal-data-link' href='#'>обробку персональних даних</a></p>
                 </form>
             </div>
