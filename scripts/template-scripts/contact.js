@@ -1,13 +1,17 @@
 jQuery(document).ready(function ($) {
-    console.log('Form submit handler attached');
+    // console.log('Form submit handler attached');
+
     $('#lead-form').on('submit', function (e) {
         e.preventDefault();
-        console.log('Form submitted');
+        // console.log('Form submitted');
 
         let iti = window.intlTelInputGlobals.getInstance(document.querySelector("#phone"));
         let phoneNumber = iti.getNumber();
         let formData = $(this).serializeArray();
         formData.push({name: 'phone', value: phoneNumber});
+
+        $('#submit-btn').prop('disabled', true);
+        $('#submit-btn .spinner').show();
 
         $.ajax({
             url: lead_form_params.ajax_url,
@@ -24,14 +28,20 @@ jQuery(document).ready(function ($) {
                 } else {
                     $('.error-message').empty();
                     $.each(response.data.errors, function (key, message) {
-                        $('#' + key).siblings('.error-message').text(message);
-                        $('#' + key).addClass('error');
+                        var inputField = $('#' + key);
+                        inputField.addClass('error');
+                        inputField.closest('.form-group').find('.error-message').text(message);
                     });
                 }
             },
             error: function (xhr, status, error) {
                 console.log('AJAX Error: ' + status + error);
             },
+
+            complete: function () {
+                $('#submit-btn').prop('disabled', false);
+                $('#submit-btn .spinner').hide();
+            }
         });
     });
 

@@ -26,12 +26,12 @@
                     <input type='hidden' name='action' value='my_action'>
                     <div class="form-group">
                         <label class='name' for="name">Ваше ім’я</label>
-                        <input type="text" id="name" name="name" required placeholder="Вкажіть Ваше ім'я">
+                        <input type="text" id="name" name="name" pattern="^[A-Za-zА-Яа-яІіЇїЄєЁёҐґ]+( [A-Za-zА-Яа-яІіЇїЄєЁёҐґ]+)*$" required placeholder="Вкажіть Ваше ім'я">
                         <span class="error-message"></span>
                     </div>
                     <div class="form-group">
                         <label for="phone">Ваш телефон</label>
-                        <input type="tel" id="phone" name="phone" required>
+                        <input type="tel" id="phone" name="phone" pattern="[\+0-9\s]+" required>
                         <span class="error-message"></span>
                     </div>
                     <div class="form-group">

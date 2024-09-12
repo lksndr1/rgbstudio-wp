@@ -102,6 +102,7 @@ body {
 }
 
 input {
+    font-family: "Inter Tight", sans-serif;
     border: 1px solid #8a8e91;
     border-radius: 8px;
     padding: 14px 18px;
@@ -131,6 +132,7 @@ label {
 }
 
 textarea {
+    font-family: "Inter Tight", sans-serif;
     margin: 8px 0 10px;
     border: 1px solid #8a8e91;
     border-radius: 8px;
@@ -159,6 +161,15 @@ textarea::placeholder {
     cursor: pointer;
 }
 
+.submit-btn:hover, .submit-btn:focus {
+    background: #7e1903;
+}
+
+.submit-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .button-text {
     position: relative;
     padding-left: 18px;
@@ -174,6 +185,21 @@ textarea::placeholder {
     height: 9px;
     background-color: #e8fb87;
     border-radius: 50%;
+}
+
+.spinner {
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 2px solid #3498db;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .personal-data {
@@ -231,6 +257,10 @@ textarea::placeholder {
     color: #6f6f72;
     margin-left: auto;
     cursor: pointer;
+}
+
+#close-modal:hover, #close-modal:focus {
+    transform: scale(1.1);
 }
 
 .modal-content {
